@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_USER = 'nnmt2810'
+        DOCKERHUB_USER = 'nnminhtuan2810'
         DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
     }
 
