@@ -21,6 +21,46 @@ pipeline {
             }
         }
 
+        stage('Maven Build') {
+            parallel {
+                stage('Build cart') {
+                    when { changeset "cart/**" }
+                    steps {
+                        sh 'cd cart && mvn clean package -DskipTests'
+                    }
+                }
+                stage('Build product') {
+                    when { changeset "product/**" }
+                    steps {
+                        sh 'cd product && mvn clean package -DskipTests'
+                    }
+                }
+                stage('Build order') {
+                    when { changeset "order/**" }
+                    steps {
+                        sh 'cd order && mvn clean package -DskipTests'
+                    }
+                }
+                stage('Build customer') {
+                    when { changeset "customer/**" }
+                    steps {
+                        sh 'cd customer && mvn clean package -DskipTests'
+                    }
+                }
+                stage('Build tax') {
+                    steps {
+                        sh 'cd tax && mvn clean package -DskipTests'
+                    }
+                }
+                stage('Build inventory') {
+                    when { changeset "inventory/**" }
+                    steps {
+                        sh 'cd inventory && mvn clean package -DskipTests'
+                    }
+                }
+            }
+        }
+
         stage('Build & Push Docker Images') {
             parallel {
                 stage('cart') {
@@ -35,7 +75,6 @@ pipeline {
                         }
                     }
                 }
-
                 stage('product') {
                     when { changeset "product/**" }
                     steps {
@@ -48,7 +87,6 @@ pipeline {
                         }
                     }
                 }
-
                 stage('order') {
                     when { changeset "order/**" }
                     steps {
@@ -61,20 +99,18 @@ pipeline {
                         }
                     }
                 }
-
                 stage('customer') {
                     when { changeset "customer/**" }
                     steps {
                         script {
                             docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                                def img = docker.build("${DOCKERHUB_USER}/yas-customer:${env.COMMIT_ID}", "./customer")
+                                def img = docker.build("${DOCKERHUB_USER}/yas-product:${env.COMMIT_ID}", "./customer")
                                 img.push()
                                 if (env.BRANCH_NAME == 'main') { img.push('main') }
                             }
                         }
                     }
                 }
-
                 stage('tax') {
                     steps {
                         script {
@@ -86,7 +122,6 @@ pipeline {
                         }
                     }
                 }
-
                 stage('inventory') {
                     when { changeset "inventory/**" }
                     steps {
