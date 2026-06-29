@@ -76,7 +76,6 @@ pipeline {
                 }
 
                 stage('tax') {
-                    when { changeset "tax/**" }
                     steps {
                         script {
                             docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
