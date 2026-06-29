@@ -25,7 +25,8 @@ pipeline {
             steps {
                 sh '''
                     chmod +x tax/mvnw
-                    tax/mvnw clean install -DskipTests -pl common-library -am
+                    cd tax
+                    ./mvnw clean install -DskipTests -pl ../common-library -am
                 '''
             }
         }
