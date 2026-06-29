@@ -26,36 +26,36 @@ pipeline {
                 stage('Build cart') {
                     when { changeset "cart/**" }
                     steps {
-                        sh 'cd cart && mvn clean package -DskipTests'
+                        sh 'cd cart && ./mvnw clean package -DskipTests'
                     }
                 }
                 stage('Build product') {
                     when { changeset "product/**" }
                     steps {
-                        sh 'cd product && mvn clean package -DskipTests'
+                        sh 'cd product && ./mvnw clean package -DskipTests'
                     }
                 }
                 stage('Build order') {
                     when { changeset "order/**" }
                     steps {
-                        sh 'cd order && mvn clean package -DskipTests'
+                        sh 'cd order && ./mvnw clean package -DskipTests'
                     }
                 }
                 stage('Build customer') {
                     when { changeset "customer/**" }
                     steps {
-                        sh 'cd customer && mvn clean package -DskipTests'
+                        sh 'cd customer && ./mvnw clean package -DskipTests'
                     }
                 }
                 stage('Build tax') {
                     steps {
-                        sh 'cd tax && mvn clean package -DskipTests'
+                        sh 'cd tax && ./mvnw clean package -DskipTests'
                     }
                 }
                 stage('Build inventory') {
                     when { changeset "inventory/**" }
                     steps {
-                        sh 'cd inventory && mvn clean package -DskipTests'
+                        sh 'cd inventory && ./mvnw clean package -DskipTests'
                     }
                 }
             }
