@@ -21,6 +21,16 @@ pipeline {
             }
         }
 
+        stage('Build Common Library') {
+            steps {
+                sh '''
+                    cd common-library
+                    chmod +x mvnw
+                    ./mvnw clean install -DskipTests
+                '''
+            }
+        }
+
         stage('Maven Build') {
             parallel {
                 stage('Build cart') {
