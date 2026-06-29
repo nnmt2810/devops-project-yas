@@ -24,8 +24,8 @@ pipeline {
         stage('Build Common Library') {
             steps {
                 sh '''
-                    chmod +x mvnw
-                    ./mvnw clean install -DskipTests -pl common-library
+                    chmod +x tax/mvnw
+                    tax/mvnw clean install -DskipTests -pl common-library -am
                 '''
             }
         }
