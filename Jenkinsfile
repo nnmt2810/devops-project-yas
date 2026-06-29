@@ -26,36 +26,60 @@ pipeline {
                 stage('Build cart') {
                     when { changeset "cart/**" }
                     steps {
-                        sh 'cd cart && ./mvnw clean package -DskipTests'
+                        sh '''
+                            cd cart
+                            chmod +x mvnw
+                            ./mvnw clean package -DskipTests
+                        '''
                     }
                 }
                 stage('Build product') {
                     when { changeset "product/**" }
                     steps {
-                        sh 'cd product && ./mvnw clean package -DskipTests'
+                        sh '''
+                            cd product
+                            chmod +x mvnw
+                            ./mvnw clean package -DskipTests
+                        '''
                     }
                 }
                 stage('Build order') {
                     when { changeset "order/**" }
                     steps {
-                        sh 'cd order && ./mvnw clean package -DskipTests'
+                        sh '''
+                            cd order
+                            chmod +x mvnw
+                            ./mvnw clean package -DskipTests
+                        '''
                     }
                 }
                 stage('Build customer') {
                     when { changeset "customer/**" }
                     steps {
-                        sh 'cd customer && ./mvnw clean package -DskipTests'
+                        sh '''
+                            cd customer
+                            chmod +x mvnw
+                            ./mvnw clean package -DskipTests
+                        '''
                     }
                 }
                 stage('Build tax') {
                     steps {
-                        sh 'cd tax && ./mvnw clean package -DskipTests'
+                        sh '''
+                            cd tax
+                            chmod +x mvnw
+                            ./mvnw clean package -DskipTests
+                        '''
                     }
                 }
                 stage('Build inventory') {
                     when { changeset "inventory/**" }
                     steps {
-                        sh 'cd inventory && ./mvnw clean package -DskipTests'
+                        sh '''
+                            cd inventory
+                            chmod +x mvnw
+                            ./mvnw clean package -DskipTests
+                        '''
                     }
                 }
             }
@@ -104,7 +128,7 @@ pipeline {
                     steps {
                         script {
                             docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
-                                def img = docker.build("${DOCKERHUB_USER}/yas-product:${env.COMMIT_ID}", "./customer")
+                                def img = docker.build("${DOCKERHUB_USER}/yas-customer:${env.COMMIT_ID}", "./customer")
                                 img.push()
                                 if (env.BRANCH_NAME == 'main') { img.push('main') }
                             }
