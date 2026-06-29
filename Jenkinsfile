@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'jdk-25'
+        maven 'Maven-3'
+    }
+
     environment {
         DOCKERHUB_USER = 'nnminhtuan2810'
         DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
@@ -21,75 +26,42 @@ pipeline {
             }
         }
 
-        stage('Build Common Library') {
-            steps {
-                sh '''
-                    chmod +x tax/mvnw
-                    cd tax
-                    ./mvnw clean install -DskipTests -pl ../common-library -am
-                '''
-            }
-        }
-
         stage('Maven Build') {
             parallel {
                 stage('Build cart') {
                     when { changeset "cart/**" }
                     steps {
-                        sh '''
-                            cd cart
-                            chmod +x mvnw
-                            ./mvnw clean package -DskipTests
-                        '''
+                        sh 'mvn -B clean package -DskipTests -pl cart -am'
                     }
                 }
                 stage('Build product') {
                     when { changeset "product/**" }
                     steps {
-                        sh '''
-                            cd product
-                            chmod +x mvnw
-                            ./mvnw clean package -DskipTests
-                        '''
+                        sh 'mvn -B clean package -DskipTests -pl product -am'
                     }
                 }
                 stage('Build order') {
                     when { changeset "order/**" }
                     steps {
-                        sh '''
-                            cd order
-                            chmod +x mvnw
-                            ./mvnw clean package -DskipTests
-                        '''
+                        sh 'mvn -B clean package -DskipTests -pl order -am'
                     }
                 }
                 stage('Build customer') {
                     when { changeset "customer/**" }
                     steps {
-                        sh '''
-                            cd customer
-                            chmod +x mvnw
-                            ./mvnw clean package -DskipTests
-                        '''
+                        sh 'mvn -B clean package -DskipTests -pl customer -am'
                     }
                 }
                 stage('Build tax') {
+                    when { changeset "tax/**" }
                     steps {
-                        sh '''
-                            cd tax
-                            chmod +x mvnw
-                            ./mvnw clean package -DskipTests
-                        '''
+                        sh 'mvn -B clean package -DskipTests -pl tax -am'
                     }
                 }
                 stage('Build inventory') {
                     when { changeset "inventory/**" }
                     steps {
-                        sh '''
-                            cd inventory
-                            chmod +x mvnw
-                            ./mvnw clean package -DskipTests
-                        '''
+                        sh 'mvn -B clean package -DskipTests -pl inventory -am'
                     }
                 }
             }
@@ -146,6 +118,7 @@ pipeline {
                     }
                 }
                 stage('tax') {
+                    when { changeset "tax/**" }
                     steps {
                         script {
                             docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
